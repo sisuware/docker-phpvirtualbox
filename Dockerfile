@@ -5,10 +5,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   nginx php5-fpm supervisor \
   wget unzip php5-cli
 
+ENV version "5.0-5"
+ENV port 80
+
 # install phpvirtualbox
-RUN wget http://sourceforge.net/projects/phpvirtualbox/files/phpvirtualbox-4.3-1.zip/download -O phpvirtualbox-4.3-1.zip
-RUN unzip phpvirtualbox-4.3-1.zip
-RUN mv phpvirtualbox-4.3-1 /var/www
+RUN wget http://sourceforge.net/projects/phpvirtualbox/files/phpvirtualbox-${version}.zip/download -O phpvirtualbox-${version}.zip
+RUN unzip phpvirtualbox-${version}.zip
+RUN mv phpvirtualbox-${version} /var/www
 ADD config.php /var/www/config.php
 RUN chown www-data:www-data -R /var/www
 
@@ -33,5 +36,5 @@ CMD php /servers-from-env.php && \
   supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 # expose only nginx HTTP port
-EXPOSE 80
+EXPOSE ${port}
 
